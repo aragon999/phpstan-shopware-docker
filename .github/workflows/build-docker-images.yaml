@@ -2,6 +2,13 @@ name: Build Docker images
 
 on:
   push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
 
 env:
   PHPSTAN_VERSION: 0.12.32
@@ -20,12 +27,30 @@ jobs:
       - name: Clone
         uses: actions/checkout@v2
 
+      - name: Get Tags
+        id: get-docker-tags
+        run: |
+          # Strip git ref prefix from version
+          version=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && version=$(echo $version | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$version" == "master" ] && version=latest
+
+          tags="${{ matrix.shopware-version }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }}-${version}"
+
+          echo "Release version ${version}"
+          echo "Image Tags: ${tags}"
+          echo "::set-output name=tags::${tags}"
+
       - name: Build docker image
         uses: docker/build-push-action@v1
         with:
           repository: ${{ env.DOCKER_REPOSITORY }}
           build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
-          tags: ${{ matrix.shopware-version }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }}
+          tags: ${{ steps.get-docker-tags.outputs.tags }}
           push: false
 
       - name: Run basic checks
@@ -53,5 +78,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ env.DOCKER_REPOSITORY }}
           build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
-          tags: ${{ matrix.shopware-version }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }}
+          tags: ${{ steps.get-docker-tags.outputs.tags }}
           push: true
