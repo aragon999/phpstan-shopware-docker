@@ -9,12 +9,13 @@ env:
 
 jobs:
   build:
+    runs-on: ubuntu-18.04
+
     strategy:
       fail-fast: false
       matrix:
         shopware-version: ['v6.2.0', 'v6.2.1', 'v6.2.2']
 
-    runs-on: ubuntu-18.04
     steps:
       - name: Clone
         uses: actions/checkout@v2
@@ -33,3 +34,24 @@ jobs:
             analyze --level 5 \
             /composer/vendor/shopware/core/Content/Property \
             /composer/vendor/shopware/core/Checkout/Cart
+
+      - name: Check for secrets
+        id: check-secrets
+        run: |
+          if [ "${{ secrets.DOCKER_USERNAME }}" != "" ] && [ "${{ secrets.DOCKER_PASSWORD }}" != "" ]
+          then
+            echo ::set-output name=secrets::'true'
+          else
+            echo "No Docker credentials found, skipping push."
+          fi
+
+      - name: Push docker image
+        uses: docker/build-push-action@v1
+        if: ${{ steps.check-secrets.outputs.secrets }}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ env.DOCKER_REPOSITORY }}
+          build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
+          tags: ${{ matrix.shopware-version }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }}
+          push: true
