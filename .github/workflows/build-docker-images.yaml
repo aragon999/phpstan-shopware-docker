@@ -1,0 +1,22 @@
+name: Build Docker images
+
+on:
+  push:
+
+env:
+  PHPSTAN_VERSION: 0.12.32
+  DOCKER_REPOSITORY: aragon999/phpstan-shopware
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Clone
+        uses: actions/checkout@v2
+
+      - name: Build docker image
+        uses: docker/build-push-action@v1
+        with:
+          repository: ${{ env.DOCKER_REPOSITORY }}
+          build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }}
+          push: false
