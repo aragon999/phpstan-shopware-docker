@@ -6,7 +6,7 @@ ARG SHOPWARE_VERSION=dev-master
 
 RUN \
     apk add --no-cache zlib-dev libpng-dev icu-dev libzip-dev \
-    && docker-php-ext-install gd intl pdo_mysql zip
+    && docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip
 
 RUN \
     composer global require phpstan/extension-installer phpstan/phpstan-symfony \
