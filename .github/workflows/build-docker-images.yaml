@@ -56,6 +56,8 @@ jobs:
       - name: Run basic checks
         run: |
           docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+            | grep "${PHPSTAN_VERSION}"
+          docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
             analyze --level 5 \
             /composer/vendor/shopware/core/Content/Property \
             /composer/vendor/shopware/core/Checkout/Cart
