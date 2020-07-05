@@ -2,13 +2,14 @@ name: Build Docker images
 
 on:
   push:
+    # disable for test
     # Publish `master` as Docker `latest` image.
-    branches:
-      - master
+    # branches:
+    #   - master
 
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+    # # Publish `v1.2.3` tags as releases.
+    # tags:
+    #   - v*
 
 env:
   PHPSTAN_VERSION: 0.12.33
@@ -57,7 +58,7 @@ jobs:
         run: |
           # Check phpstan version of the image
           docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
-            | grep "${PHPSTAN_VERSION}" || exit_code=$?
+            | grep "123" || exit_code=$?
           [[ "$exit_code" -ne "0" ]] \
             && docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
             && echo "Did not find expected phpstan version" \
@@ -72,12 +73,13 @@ jobs:
       - name: Check for secrets
         id: check-secrets
         run: |
-          if [ "${{ secrets.DOCKER_USERNAME }}" != "" ] && [ "${{ secrets.DOCKER_PASSWORD }}" != "" ]
-          then
-            echo ::set-output name=secrets::'true'
-          else
-            echo "No Docker credentials found, skipping push."
-          fi
+          # Disable for test
+          # if [ "${{ secrets.DOCKER_USERNAME }}" != "" ] && [ "${{ secrets.DOCKER_PASSWORD }}" != "" ]
+          # then
+          #   echo ::set-output name=secrets::'true'
+          # else
+          # fi
+          echo "Test, no push to dockerhub"
 
       - name: Push docker image
         uses: docker/build-push-action@v1
