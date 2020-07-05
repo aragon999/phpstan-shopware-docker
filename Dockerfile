@@ -11,8 +11,13 @@ RUN \
 
 # Install composer packages
 RUN \
-    composer global require phpstan/extension-installer phpstan/phpstan-symfony \
-    && composer global require shopware/core:${SHOPWARE_VERSION} shopware/administration:${SHOPWARE_VERSION} shopware/storefront:${SHOPWARE_VERSION}
+    composer global require \
+        phpstan/extension-installer \
+        phpstan/phpstan-symfony \
+        shopware/core:${SHOPWARE_VERSION} \
+        shopware/administration:${SHOPWARE_VERSION} \
+        shopware/storefront:${SHOPWARE_VERSION} \
+        shopware/elasticsearch:${SHOPWARE_VERSION}
 
 # Cleanup
 RUN \
