@@ -58,8 +58,9 @@ jobs:
           # Check phpstan version of the image
           docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
             | grep "${PHPSTAN_VERSION}" || exit_code=$?
-          [ "${exit_code}" != 0 ] \
+          [ "$exit_code" -ne "0" ] \
             && docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+            && echo "Did not find expected phpstan version" \
             && exit ${exit_code}
 
           # Check that phpstan has access to the shopware classes
