@@ -2,13 +2,13 @@ name: Build Docker images
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
+    # # Publish `master` as Docker `latest` image.
+    # branches:
+    #   - master
 
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+    # # Publish `v1.2.3` tags as releases.
+    # tags:
+    #   - v*
 
 env:
   PHPSTAN_VERSION: 0.12.32
