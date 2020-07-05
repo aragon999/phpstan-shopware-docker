@@ -5,8 +5,9 @@ FROM phpstan/phpstan:${PHPSTAN_VERSION} as BUILD
 ARG SHOPWARE_VERSION=dev-master
 
 # Install php extensions needed for Shopware
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-RUN install-php-extensions gd intl pdo_mysql zip
+RUN \
+    apk add --no-cache zlib-dev libpng-dev icu-dev libzip-dev \
+    && docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip
 
 # Install composer packages
 RUN \
