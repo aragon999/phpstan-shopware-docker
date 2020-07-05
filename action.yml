@@ -1,0 +1,22 @@
+# action.yml
+name: 'PHPStan Shopware analyzer'
+
+description: 'Run phpstan with preinstalled shopware for plugins'
+
+inputs:
+  # TODO: Currently not possible to use inputs in image tags
+  # shopware-version:
+  #   description: 'Shopware Version'
+  #   required: true
+  #   default: 'v6.2.2'
+  path:
+    description: 'Path to analyze'
+    required: true
+    default: '.'
+
+runs:
+  using: 'docker'
+  image: 'docker://aragon999/phpstan-shopware:v6.2.2'
+  args:
+    - analyze
+    - ${{ inputs.path }}
