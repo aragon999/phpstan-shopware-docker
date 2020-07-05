@@ -46,12 +46,14 @@ jobs:
           echo "::set-output name=tags::${tags}"
 
       - name: Build docker image
-        uses: docker/build-push-action@v1
+        uses: whoan/docker-build-with-cache-action@v5
         with:
-          repository: ${{ env.DOCKER_REPOSITORY }}
-          build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
-          tags: ${{ steps.get-docker-tags.outputs.tags }}
-          push: false
+          username: aragon999
+          password: "${{ secrets.GITHUB_TOKEN }}"
+          registry: docker.pkg.github.com
+          image_name: ${{ env.DOCKER_REPOSITORY }}
+          image_tag: ${{ steps.get-docker-tags.outputs.tags }}
+          build_extra_args: "--build-arg=\"SHOPWARE_VERSION=${{ matrix.shopware-version }}\" --build-arg=\"PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }}\""
 
       - name: Run basic checks
         run: |
