@@ -55,8 +55,14 @@ jobs:
 
       - name: Run basic checks
         run: |
+          # Check phpstan version of the image
           docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
-            | grep "${PHPSTAN_VERSION}"
+            | grep "${PHPSTAN_VERSION}" || exit_code=$?
+          [ "${exit_code}" != 0 ] \
+            && docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+            && exit ${exit_code}
+
+          # Check that phpstan has access to the shopware classes
           docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
             analyze --level 5 \
             /composer/vendor/shopware/core/Content/Property \
