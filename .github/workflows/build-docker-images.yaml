@@ -53,7 +53,7 @@ jobs:
           registry: docker.pkg.github.com
           image_name: ${{ env.DOCKER_REPOSITORY }}
           image_tag: ${{ steps.get-docker-tags.outputs.tags }}
-          build_extra_args: "--build-arg=\"SHOPWARE_VERSION=${{ matrix.shopware-version }}\" --build-arg=\"PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }}\""
+          build_extra_args: "--build-arg SHOPWARE_VERSION=${{ matrix.shopware-version }} --build-arg PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }}"
 
       - name: Run basic checks
         run: |
