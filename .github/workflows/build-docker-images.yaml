@@ -46,6 +46,7 @@ jobs:
 
           echo "Release version ${version}"
           echo "Image Tags: ${tags}"
+          echo "::set-env name=SHOPWARE_VERSION_TAG::${shopware_version_tag}"
           echo "::set-output name=tags::${tags}"
 
       - name: Build docker image
@@ -67,7 +68,7 @@ jobs:
             && exit ${exit_code}
 
           # Check that phpstan has access to the shopware classes
-          docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+          docker run --rm ${DOCKER_REPOSITORY}:${{ env.SHOPWARE_VERSION_TAG }}-${PHPSTAN_VERSION} \
             analyze --level 5 \
             /composer/vendor/shopware/core/Content/Property \
             /composer/vendor/shopware/core/Checkout/Cart
