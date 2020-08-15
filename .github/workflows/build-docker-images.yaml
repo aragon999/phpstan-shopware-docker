@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shopware-version: ['v6.2.0', 'v6.2.1', 'v6.2.2', 'v6.2.3']
+        shopware-version: ['v6.2.0', 'v6.2.1', 'v6.2.2', 'v6.2.3', 'v6.3.0.1']
 
     steps:
       - name: Clone
@@ -39,7 +39,10 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$version" == "master" ] && version=latest
 
-          tags="${{ matrix.shopware-version }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }},${{ matrix.shopware-version }}-${{ env.PHPSTAN_VERSION }}-${version}"
+          shopware_version_tag=$(echo "${{ matrix.shopware-version }}" | grep -m1 -E '(v[0-9]+\.[0-9]+\.[0-9]+)' -o)
+          [ "${shopware_version_tag}" == "" ] && exit 1
+
+          tags="${shopware_version_tag},${shopware_version_tag}-${{ env.PHPSTAN_VERSION }},${shopware_version_tag}-${{ env.PHPSTAN_VERSION }}-${version}"
 
           echo "Release version ${version}"
           echo "Image Tags: ${tags}"
