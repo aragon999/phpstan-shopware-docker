@@ -70,8 +70,7 @@ jobs:
           # Check that phpstan has access to the shopware classes
           docker run --rm ${DOCKER_REPOSITORY}:${{ env.SHOPWARE_VERSION_TAG }}-${PHPSTAN_VERSION} \
             analyze --level 5 \
-            /composer/vendor/shopware/core/Content/Property \
-            /composer/vendor/shopware/core/Checkout/Cart
+            /composer/vendor/shopware/core/Content/Property
 
       - name: Check for secrets
         id: check-secrets
