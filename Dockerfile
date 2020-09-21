@@ -6,8 +6,8 @@ ARG SHOPWARE_VERSION=dev-master
 
 # Install php extensions needed for Shopware
 RUN \
-    apk add --no-cache zlib-dev libpng-dev icu-dev libzip-dev \
-    && docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip
+    apk add --no-cache zlib-dev libpng-dev icu-dev libzip-dev && \
+    docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip
 
 # Install composer packages
 RUN \
