@@ -11,7 +11,7 @@ on:
       - v*
 
 env:
-  PHPSTAN_VERSION: 0.12.43
+  PHPSTAN_VERSION: 0.12.44
   DOCKER_REPOSITORY: aragon999/phpstan-shopware
 
 jobs:
