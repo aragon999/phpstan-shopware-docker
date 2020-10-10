@@ -27,48 +27,38 @@ jobs:
       - name: Clone
         uses: actions/checkout@v2
 
-      - name: Get Tags
-        id: get-docker-tags
+      - name: Get Tag
+        id: get-docker-tag
         run: |
-          # Strip git ref prefix from version
-          version=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && version=$(echo $version | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$version" == "master" ] && version=latest
-
           shopware_version_tag=$(echo "${{ matrix.shopware-version }}" | grep -m1 -E '(v[0-9]+\.[0-9]+\.[0-9]+)' -o)
           [ "${shopware_version_tag}" == "" ] && exit 1
 
-          tags="${shopware_version_tag},${shopware_version_tag}-${{ env.PHPSTAN_VERSION }},${shopware_version_tag}-${{ env.PHPSTAN_VERSION }}-${version}"
+          tag="${{ env.DOCKER_REPOSITORY }}:${shopware_version_tag}"
+          echo "Shopware version ${{ matrix.shopware-version }}"
+          echo "Image Tag: ${tag}"
 
-          echo "Release version ${version}"
-          echo "Image Tags: ${tags}"
           echo "::set-env name=SHOPWARE_VERSION_TAG::${shopware_version_tag}"
-          echo "::set-output name=tags::${tags}"
+          echo "::set-output name=tag::${tag}"
 
       - name: Build docker image
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
-          repository: ${{ env.DOCKER_REPOSITORY }}
           build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
-          tags: ${{ steps.get-docker-tags.outputs.tags }}
+          tags: ${{ steps.get-docker-tag.outputs.tag }}
           push: false
 
       - name: Run basic checks
         run: |
           # Check phpstan version of the image
-          docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+          docker run --rm ${{ steps.get-docker-tag.outputs.tag }} \
             | grep "${PHPSTAN_VERSION}" || exit_code=$?
           [[ "$exit_code" -ne "0" ]] \
-            && docker run --rm ${DOCKER_REPOSITORY}:${{ matrix.shopware-version }}-${PHPSTAN_VERSION} \
+            && docker run --rm ${{ steps.get-docker-tag.outputs.tag }} \
             && echo "Did not find expected phpstan version" \
             && exit ${exit_code}
 
           # Check that phpstan has access to the shopware classes
-          docker run --rm ${DOCKER_REPOSITORY}:${{ env.SHOPWARE_VERSION_TAG }}-${PHPSTAN_VERSION} \
+          docker run --rm ${{ steps.get-docker-tag.outputs.tag }} \
             analyze --level 5 \
             /composer/vendor/shopware/core/Content/Property
 
@@ -83,12 +73,11 @@ jobs:
           fi
 
       - name: Push docker image
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         if: ${{ steps.check-secrets.outputs.secrets }}
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: ${{ env.DOCKER_REPOSITORY }}
           build_args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
-          tags: ${{ steps.get-docker-tags.outputs.tags }}
+          tags: ${{ steps.get-docker-tag.outputs.tag }}
           push: true
