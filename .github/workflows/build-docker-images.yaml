@@ -47,7 +47,9 @@ jobs:
       - name: Build docker image
         uses: docker/build-push-action@v2
         with:
-          build-args: PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }},SHOPWARE_VERSION=${{ matrix.shopware-version }}
+          build-args: |
+            PHPSTAN_VERSION=${{ env.PHPSTAN_VERSION }}
+            SHOPWARE_VERSION=${{ matrix.shopware-version }}
           tags: ${{ steps.get-docker-tag.outputs.tag }}
           push: false
           load: true
