@@ -25,15 +25,15 @@ RUN \
         phpstan/phpstan-symfony \
         phpstan/phpstan-phpunit \
         phpstan/extension-installer \
-        shopware/core:${SHOPWARE_VERSION} \
-        shopware/administration:${SHOPWARE_VERSION} \
-        shopware/storefront:${SHOPWARE_VERSION} \
-        shopware/elasticsearch:${SHOPWARE_VERSION}
 
 # Cleanup
 RUN \
     rm -rf /var/cache/apk/* /var/tmp/* /tmp/* \
     && composer global clearcache
+        shopware/core:"${SHOPWARE_VERSION}" \
+        shopware/administration:"${SHOPWARE_VERSION}" \
+        shopware/storefront:"${SHOPWARE_VERSION}" \
+        shopware/elasticsearch:"${SHOPWARE_VERSION}"
 
 FROM scratch
 
