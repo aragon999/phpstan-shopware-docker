@@ -1,6 +1,6 @@
 ARG PHPSTAN_VERSION=latest
 
-FROM phpstan/phpstan:${PHPSTAN_VERSION} as BUILD
+FROM ghcr.io/phpstan/phpstan:${PHPSTAN_VERSION} as BUILD
 
 ARG SHOPWARE_VERSION=dev-master
 
