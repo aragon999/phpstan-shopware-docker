@@ -5,7 +5,8 @@ ARG SHOPWARE_VERSION=dev-master
 # Install php extensions needed for Shopware
 RUN \
     apk add --no-cache git zlib-dev libpng-dev icu-dev libzip-dev && \
-    docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip
+    docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip && \
+    rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
 ENV COMPOSER_HOME /composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -25,15 +26,12 @@ RUN \
         phpstan/phpstan-symfony \
         phpstan/phpstan-phpunit \
         phpstan/extension-installer \
-
-# Cleanup
-RUN \
-    rm -rf /var/cache/apk/* /var/tmp/* /tmp/* \
-    && composer global clearcache
         shopware/core:"${SHOPWARE_VERSION}" \
         shopware/administration:"${SHOPWARE_VERSION}" \
         shopware/storefront:"${SHOPWARE_VERSION}" \
-        shopware/elasticsearch:"${SHOPWARE_VERSION}"
+        shopware/elasticsearch:"${SHOPWARE_VERSION}" \
+    && composer global clearcache && \
+    rm -rf /var/tmp/* /tmp/*
 
 FROM scratch
 
