@@ -15,7 +15,7 @@ ENV PHP_CONF_DIR=/usr/local/etc/php/conf.d
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-ARG PHPSTAN_VERSION=latest
+ARG PHPSTAN_VERSION=dev-master
 
 # Install composer packages
 RUN \
