@@ -1,6 +1,6 @@
 FROM php:7.4-cli-alpine as BUILD
 
-ARG SHOPWARE_VERSION=dev-master
+ARG SHOPWARE_VERSION=dev-trunk
 
 # Install php extensions needed for Shopware
 RUN \
