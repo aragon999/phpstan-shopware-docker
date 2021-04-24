@@ -16,7 +16,7 @@ inputs:
 
 runs:
   using: 'docker'
-  image: 'docker://aragon999/phpstan-shopware:v6.2.2'
+  image: 'docker://aragon999/phpstan-shopware:v6.3.5.3'
   args:
     - analyze
     - ${{ inputs.path }}
