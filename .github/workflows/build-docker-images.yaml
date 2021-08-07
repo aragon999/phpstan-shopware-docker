@@ -92,7 +92,7 @@ jobs:
           # Check that phpstan has access to the shopware classes
           docker run --rm ${{ steps.get-docker-tag.outputs.tag }} \
             analyze --level 5 \
-            /composer/vendor/shopware/core/Content/Property
+            /composer/vendor/shopware/core/Content/Sitemap
 
       - name: Check for push
         id: check-push
