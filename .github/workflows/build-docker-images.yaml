@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  PHPSTAN_VERSION: 1.4.4
+  PHPSTAN_VERSION: 1.4.5
   DOCKER_REPOSITORY: aragon999/phpstan-shopware
   CACHE_KEY: 2020-09-22
 
