@@ -4,8 +4,9 @@ ARG SHOPWARE_VERSION=dev-trunk
 
 # Install php extensions needed for Shopware
 RUN \
-    apk add --no-cache git zlib-dev libpng-dev icu-dev libzip-dev && \
-    docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip && \
+    apk add --no-cache git zlib-dev libpng-dev icu-dev libzip-dev imap-dev krb5-dev && \
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
+    docker-php-ext-install -j$(nproc) gd intl pdo_mysql zip imap && \
     rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
 ENV COMPOSER_HOME /composer
