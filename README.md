@@ -7,7 +7,7 @@ Use a prebuilt `phpstan` Docker image to analyse Shopware 6 plugins.
 ## On local setups
 
 ```bash
-docker run --rm -v /path/to/the/plugin:/app aragon999/phpstan-shopware:v6.2.0 analyze --level 5 .
+docker run --rm -v /path/to/the/plugin:/app aragon999/phpstan-shopware:v6.4.0 analyze --level 5 .
 ```
 
 ## In Github actions
@@ -32,10 +32,10 @@ jobs:
 ```
 ## In Gitlab CI
 
-This will use the Shopware version v6.2.2 with the latest PHPStan:
+This will use the Shopware version v6.4.0 with the latest PHPStan:
 ```yaml
 image:
-  name: aragon999/phpstan-shopware:v6.2.2
+  name: aragon999/phpstan-shopware:v6.4.0
   entrypoint: [""]
 
 lint:plugin:
