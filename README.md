@@ -32,13 +32,34 @@ jobs:
 ```
 ## In Gitlab CI
 
-This will use the Shopware version v6.4.0 with the latest PHPStan:
+### Minimal setup
+
+This will use the Shopware version v6.4.0:
 ```yaml
 image:
   name: aragon999/phpstan-shopware:v6.4.0
   entrypoint: [""]
 
-lint:plugin:
+lint:phpstan:
   script:
     - phpstan analyze .
 ```
+
+### With additional plugin dependencies
+
+When the plugin depends on an additional plugin you need to install the plugin as well, here is a template which includes the Shopware migration plugin which has no publicly available composer packages but exists publicly on Github.
+
+```yaml
+lint:phpstan:
+  image:
+    name: aragon999/phpstan-shopware:v6.4.0
+    entrypoint: [""]
+  script:
+    - phpstan --version
+    - composer global config github-oauth.github.com "${GITHUB_OAUTH_TOKEN}"
+    - composer global config repositories.swag-migration-assistant vcs https://github.com/shopware/SwagMigrationAssistant.git
+    - composer global require swag/migration-assistant:master@dev
+    - phpstan analyze .
+```
+
+Note that you need to add the `GITHUB_OAUTH_TOKEN` as secret.
