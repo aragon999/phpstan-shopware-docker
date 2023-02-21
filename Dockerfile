@@ -22,7 +22,8 @@ ARG PHPSTAN_VERSION=dev-master
 # Install composer packages
 RUN \
     echo "memory_limit=8192M" > $PHP_CONF_DIR/99_memory-limit.ini && \
-    composer global config allow-plugins.phpstan/extension-installer false && \
+    composer global config --no-plugins allow-plugins.phpstan/extension-installer false && \
+    composer global config --no-plugins allow-plugins.symfony/runtime false && \
     composer global require \
         phpstan/phpstan:"${PHPSTAN_VERSION}" \
         phpunit/phpunit \
