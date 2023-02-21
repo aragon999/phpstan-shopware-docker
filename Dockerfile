@@ -1,4 +1,5 @@
-FROM php:7.4-cli-alpine as BUILD
+ARG PHP_VERSION=7.4
+FROM php:${PHP_VERSION}-cli-alpine as BUILD
 
 ARG SHOPWARE_VERSION=dev-trunk
 
