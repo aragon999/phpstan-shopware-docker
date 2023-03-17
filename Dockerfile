@@ -1,8 +1,6 @@
 ARG PHP_VERSION=7.4
 FROM php:${PHP_VERSION}-cli-alpine as BUILD
 
-ARG SHOPWARE_VERSION=dev-trunk
-
 # Install php extensions needed for Shopware
 RUN \
     apk add --no-cache git zlib-dev libpng-dev icu-dev libzip-dev openssl-dev imap-dev krb5-dev && \
@@ -18,6 +16,7 @@ ENV PHP_CONF_DIR=/usr/local/etc/php/conf.d
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 ARG PHPSTAN_VERSION=dev-master
+ARG SHOPWARE_VERSION=dev-trunk
 
 # Install composer packages
 RUN \
