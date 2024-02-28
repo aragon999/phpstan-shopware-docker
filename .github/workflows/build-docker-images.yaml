@@ -76,7 +76,7 @@ jobs:
               php-version: "8.1"
             - shopware-version: v6.5.8.6
               php-version: "8.1"
-            - shopware-version: v6.6.0.0-rc3
+            - shopware-version: v6.6.0.0-rc4
               php-version: "8.2"
 
     steps:
