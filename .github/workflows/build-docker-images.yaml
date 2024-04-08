@@ -78,6 +78,8 @@ jobs:
               php-version: "8.1"
             - shopware-version: v6.6.0.3
               php-version: "8.2"
+            - shopware-version: v6.6.1.0
+              php-version: "8.2"
 
     steps:
       - name: Clone
