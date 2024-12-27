@@ -92,7 +92,7 @@ jobs:
               php-version: "8.2"
             - shopware-version: v6.6.7.1
               php-version: "8.2"
-            - shopware-version: v6.6.8.1
+            - shopware-version: v6.6.8.2
               php-version: "8.2"
 
     steps:
